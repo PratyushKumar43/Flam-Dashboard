@@ -2,9 +2,9 @@
 
 A high-performance real-time dashboard built with **Next.js 14+ App Router** and **TypeScript** that smoothly renders and updates **10,000+ data points at 60fps** using a **Canvas + SVG hybrid approach**.
 
-![Dashboard Screenshot](./Screenshot%202025-11-12%20222132.png)
+![Dashboard Screenshot](./image.png)
 
-*Dashboard showing real-time data visualization with performance metrics (Performance: 83, Accessibility: 95, Best Practices: 96, SEO: 100)*
+*Dashboard showing real-time data visualization with performance metrics*
 
 ## 📋 Assignment Overview
 
@@ -509,7 +509,11 @@ This project meets all assignment requirements:
 
 ### Dashboard Screenshot
 
-![Dashboard Screenshot](./Screenshot%202025-11-12%20222132.png)
+![Dashboard Screenshot](./image.png)
+
+### Performance Report
+
+![Performance Report](./Screenshot%202025-11-12%20222132.png)
 
 The dashboard displays:
 - **Performance Metrics**: Performance: 83, Accessibility: 95, Best Practices: 96, SEO: 100
