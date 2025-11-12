@@ -25,10 +25,19 @@ interface DataContextValue {
 
 const DataContext = createContext<DataContextValue | undefined>(undefined)
 
-export function DataProvider({ children }: { children: React.ReactNode }) {
-  const [fpsData, setFpsData] = useState<DataPoint[]>([])
-  const [memoryData, setMemoryData] = useState<DataPoint[]>([])
-  const [latencyData, setLatencyData] = useState<DataPoint[]>([])
+interface DataProviderProps {
+  children: React.ReactNode
+  initialData?: {
+    fps?: DataPoint[]
+    memory?: DataPoint[]
+    latency?: DataPoint[]
+  }
+}
+
+export function DataProvider({ children, initialData }: DataProviderProps) {
+  const [fpsData, setFpsData] = useState<DataPoint[]>(initialData?.fps || [])
+  const [memoryData, setMemoryData] = useState<DataPoint[]>(initialData?.memory || [])
+  const [latencyData, setLatencyData] = useState<DataPoint[]>(initialData?.latency || [])
   const [aggregationPeriod, setAggregationPeriod] = useState<AggregationPeriod>('1min')
 
   const updateData = useCallback((newData: {
