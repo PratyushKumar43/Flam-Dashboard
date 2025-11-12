@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "header": "Kafka stream ingest",
+    "type": "Pipeline",
+    "status": "Stable",
+    "target": "60 fps",
+    "limit": "52 fps floor",
+    "reviewer": "Ops bot"
+  },
+  {
+    "id": 2,
+    "header": "Windowed aggregator",
+    "type": "Worker",
+    "status": "Stable",
+    "target": "100 ms",
+    "limit": "88 ms",
+    "reviewer": "Edge process"
+  },
+  {
+    "id": 3,
+    "header": "Canvas renderer",
+    "type": "Rendering",
+    "status": "Stable",
+    "target": "16 ms frame",
+    "limit": "12 ms",
+    "reviewer": "Render thread"
+  },
+  {
+    "id": 4,
+    "header": "SVG overlay",
+    "type": "Rendering",
+    "status": "Investigating",
+    "target": "11 ms paint",
+    "limit": "18 ms",
+    "reviewer": "UX lab"
+  },
+  {
+    "id": 5,
+    "header": "Worker pool",
+    "type": "Compute",
+    "status": "Stable",
+    "target": "12k msgs/s",
+    "limit": "10.8k",
+    "reviewer": "Scheduler"
+  },
+  {
+    "id": 6,
+    "header": "Virtualized table",
+    "type": "UI",
+    "status": "Tuning",
+    "target": "0 dropped",
+    "limit": "2 dropped",
+    "reviewer": "QA crew"
+  },
+  {
+    "id": 7,
+    "header": "Performance monitor",
+    "type": "Observability",
+    "status": "Stable",
+    "target": "99.9% uptime",
+    "limit": "99.2%",
+    "reviewer": "SRE"
+  },
+  {
+    "id": 8,
+    "header": "Memory profiler",
+    "type": "Observability",
+    "status": "Stable",
+    "target": "< 1 MB/hr",
+    "limit": "0.6 MB",
+    "reviewer": "SRE"
+  },
+  {
+    "id": 9,
+    "header": "Stress-test harness",
+    "type": "Testing",
+    "status": "Running",
+    "target": "50k pts",
+    "limit": "44k",
+    "reviewer": "Perf lab"
+  },
+  {
+    "id": 10,
+    "header": "Offline replay",
+    "type": "Pipeline",
+    "status": "Queued",
+    "target": "Batch 120s",
+    "limit": "Awaiting",
+    "reviewer": "Archive"
+  }
+]
