@@ -1,23 +1,15 @@
 'use client';
 
-import Link from "next/link"
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
+import { useTheme } from 'next-themes';
 
 gsap.registerPlugin(SplitText, useGSAP);
 
-declare global {
-  interface Window {
-    UnicornStudio?: {
-      isInitialized?: boolean;
-      init?: () => void;
-    };
-  }
-}
-
+// ===================== HERO =====================
 interface HeroProps {
   title: string;
   description: string;
@@ -30,14 +22,15 @@ interface HeroProps {
 export default function Hero({
   title,
   description,
-  badgeText = 'Generative Surfaces',
-  badgeLabel = 'New',
+  badgeText = "Generative Surfaces",
+  badgeLabel = "New",
   ctaButtons = [
-    { text: 'Get started', href: '#get-started', primary: true },
-    { text: 'View showcase', href: '#showcase' }
+    { text: "Get started", href: "#get-started", primary: true },
+    { text: "View showcase", href: "#showcase" }
   ],
-  microDetails = ['Low‑weight font', 'Tight tracking', 'Subtle motion']
+  microDetails = ["Low‑weight font", "Tight tracking", "Subtle motion"]
 }: HeroProps) {
+  const { theme } = useTheme();
   const sectionRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLHeadingElement | null>(null);
   const paraRef = useRef<HTMLParagraphElement | null>(null);
@@ -47,173 +40,179 @@ export default function Hero({
   const microItem1Ref = useRef<HTMLLIElement | null>(null);
   const microItem2Ref = useRef<HTMLLIElement | null>(null);
   const microItem3Ref = useRef<HTMLLIElement | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  
+  const isDark = theme === 'dark';
 
   useGSAP(
     () => {
       if (!headerRef.current) return;
 
-      document.fonts.ready.then(() => {
-        const split = new SplitText(headerRef.current!, {
-          type: 'lines',
-          wordsClass: 'lines'
-        });
+      const initAnimation = () => {
+        try {
+          if (!headerRef.current) return;
 
-        gsap.set(split.lines, {
-          filter: 'blur(16px)',
-          yPercent: 30,
-          autoAlpha: 0,
-          scale: 1.06,
-          transformOrigin: '50% 100%'
-        });
+          const split = new SplitText(headerRef.current!, {
+            type: 'lines',
+            wordsClass: 'lines',
+          });
 
-        if (badgeRef.current) {
-          gsap.set(badgeRef.current, { autoAlpha: 0, y: -8 });
-        }
+          if (!split.lines || split.lines.length === 0) {
+            return;
+          }
 
-        if (paraRef.current) {
-          gsap.set(paraRef.current, { autoAlpha: 0, y: 8 });
-        }
+          // Animate only transforms - content stays visible
+          // Don't touch opacity, let CSS handle visibility
+          gsap.fromTo(
+            split.lines,
+            {
+              filter: 'blur(12px)',
+              yPercent: 20,
+              scale: 1.04,
+            },
+            {
+              filter: 'blur(0px)',
+              yPercent: 0,
+              scale: 1,
+              duration: 1.0,
+              stagger: 0.12,
+              ease: 'power3.out',
+            }
+          );
 
-        if (ctaRef.current) {
-          gsap.set(ctaRef.current, { autoAlpha: 0, y: 8 });
-        }
-
-        const microItems = [microItem1Ref.current, microItem2Ref.current, microItem3Ref.current].filter(
-          Boolean
-        );
-
-        if (microItems.length > 0) {
-          gsap.set(microItems, { autoAlpha: 0, y: 6 });
-        }
-
-        const tl = gsap.timeline({
-          defaults: { ease: 'power3.out' }
-        });
-
-        if (badgeRef.current) {
-          tl.to(badgeRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.0);
-        }
-
-        tl.to(
-          split.lines,
-          {
-            filter: 'blur(0px)',
-            yPercent: 0,
-            autoAlpha: 1,
-            scale: 1,
-            duration: 0.9,
-            stagger: 0.15
-          },
-          0.1
-        );
-
-        if (paraRef.current) {
-          tl.to(paraRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, '-=0.55');
-        }
-
-        if (ctaRef.current) {
-          tl.to(ctaRef.current, { autoAlpha: 1, y: 0, duration: 0.5 }, '-=0.35');
-        }
-
-        if (microItems.length > 0) {
-          tl.to(microItems, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.1 }, '-=0.25');
-        }
-      });
-    },
-    { scope: sectionRef }
-  );
-
-  useEffect(() => {
-    if (!isMounted) return;
-
-    // Initialize Unicorn Studio script
-    if (!window.UnicornStudio) {
-      window.UnicornStudio = { isInitialized: false };
-      const script = document.createElement('script');
-      script.src =
-        'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js';
-      script.onload = function () {
-        if (!window.UnicornStudio?.isInitialized && window.UnicornStudio?.init) {
-          window.UnicornStudio.init();
-          window.UnicornStudio.isInitialized = true;
+          if (badgeRef.current) {
+            gsap.fromTo(
+              badgeRef.current,
+              { y: -6 },
+              { y: 0, duration: 0.6, ease: 'power3.out' }
+            );
+          }
+          if (paraRef.current) {
+            gsap.fromTo(
+              paraRef.current,
+              { y: 6 },
+              { y: 0, duration: 0.6, ease: 'power3.out', delay: 0.2 }
+            );
+          }
+          if (ctaRef.current) {
+            gsap.fromTo(
+              ctaRef.current,
+              { y: 6 },
+              { y: 0, duration: 0.6, ease: 'power3.out', delay: 0.4 }
+            );
+          }
+          const microItems = [microItem1Ref.current, microItem2Ref.current, microItem3Ref.current].filter(Boolean);
+          if (microItems.length > 0) {
+            gsap.fromTo(
+              microItems,
+              { y: 4 },
+              { y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out', delay: 0.6 }
+            );
+          }
+        } catch (error) {
+          console.error('Error initializing hero animations:', error);
         }
       };
-      (document.head || document.body).appendChild(script);
-    } else if (window.UnicornStudio.init && !window.UnicornStudio.isInitialized) {
-      window.UnicornStudio.init();
-      window.UnicornStudio.isInitialized = true;
-    }
-  }, [isMounted]);
+
+      // Wait for fonts, then animate
+      if (document.fonts && document.fonts.ready) {
+        Promise.race([
+          document.fonts.ready,
+          new Promise((resolve) => setTimeout(resolve, 400)),
+        ]).then(() => {
+          setTimeout(initAnimation, 150);
+        });
+      } else {
+        setTimeout(initAnimation, 150);
+      }
+    },
+    { scope: sectionRef },
+  );
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen w-full overflow-hidden">
-      {isMounted && (
-        <div
-          data-us-project="K7xzrAoejHe2lHXqTJzm"
-          className="absolute top-0 left-0 -z-10 w-full h-full"
-          suppressHydrationWarning
-        />
-      )}
-
-      <div className="relative mx-auto flex max-w-7xl flex-col items-start gap-6 px-6 pb-24 pt-36 sm:gap-8 sm:pt-44 md:px-10 lg:px-16">
-        <div
-          ref={badgeRef}
-          className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 backdrop-blur-sm"
+    <section 
+      ref={sectionRef} 
+      className="relative h-screen w-screen overflow-hidden bg-background text-foreground"
+      style={{ 
+        color: 'hsl(var(--foreground))',
+        backgroundColor: 'hsl(var(--background))',
+        position: 'relative'
+      }}
+    >
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-start gap-6 px-6 pb-24 pt-36 sm:gap-8 sm:pt-44 md:px-10 lg:px-16">
+        <div 
+          ref={badgeRef} 
+          className="inline-flex items-center gap-2 rounded-full border border-border dark:border-white/10 bg-card dark:bg-white/5 px-3 py-1.5 backdrop-blur-sm"
         >
-          <span className="text-[10px] font-light uppercase tracking-[0.08em] text-white/70">
-            {badgeLabel}
-          </span>
-          <span className="h-1 w-1 rounded-full bg-white/40" />
-          <span className="text-xs font-light tracking-tight text-white/80">{badgeText}</span>
+          <span className="text-[10px] font-light uppercase tracking-[0.08em] text-foreground/70 dark:text-white/70">{badgeLabel}</span>
+          <span className="h-1 w-1 rounded-full bg-foreground/50 dark:bg-white/40" />
+          <span className="text-xs font-light tracking-tight text-foreground dark:text-white/80">{badgeText}</span>
         </div>
 
-        <h1
-          ref={headerRef}
-          className="max-w-2xl text-left text-5xl font-extralight leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl"
+        <h1 
+          ref={headerRef} 
+          className="max-w-2xl text-left text-5xl font-extralight leading-[1.05] tracking-tight text-foreground dark:text-white sm:text-6xl md:text-7xl"
         >
           {title}
         </h1>
 
-        <p
-          ref={paraRef}
-          className="max-w-xl text-left text-base font-light leading-relaxed tracking-tight text-white/75 sm:text-lg"
+        <p 
+          ref={paraRef} 
+          className="max-w-xl text-left text-base font-light leading-relaxed tracking-tight text-foreground/80 dark:text-white/75 sm:text-lg"
         >
           {description}
         </p>
 
-        <div ref={ctaRef} className="flex flex-wrap items-center gap-3 pt-2">
-          {ctaButtons.map((button, index) => (
-            <Link
-              key={index}
-              href={button.href}
-              className={`rounded-2xl border border-white/10 px-5 py-3 text-sm font-light tracking-tight transition-colors focus:outline-none focus:ring-2 focus:ring-white/30 duration-300 ${
-                button.primary
-                  ? 'bg-white/10 text-white backdrop-blur-sm hover:bg-white/20'
-                  : 'text-white/80 hover:bg-white/5'
-              }`}
-            >
-              {button.text}
-            </Link>
-          ))}
+        <div 
+          ref={ctaRef} 
+          className="flex flex-wrap items-center gap-3 pt-2"
+        >
+          {ctaButtons.map((button, index) => {
+            // Determine border color based on theme and button type
+            let borderColor: string;
+            if (button.primary) {
+              borderColor = isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.35)';
+            } else {
+              borderColor = isDark ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.45)';
+            }
+
+            return (
+              <a
+                key={index}
+                href={button.href}
+                className={`rounded-2xl px-5 py-3 text-sm font-light tracking-tight transition-all focus:outline-none focus:ring-2 focus:ring-ring duration-300 ${
+                  button.primary
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+                    : "text-foreground hover:bg-accent hover:text-accent-foreground dark:text-white/80 dark:hover:bg-white/5"
+                }`}
+                style={{
+                  border: '1px solid',
+                  borderColor: borderColor,
+                }}
+              >
+                {button.text}
+              </a>
+            );
+          })}
         </div>
 
-        <ul ref={microRef} className="mt-8 flex flex-wrap gap-6 text-xs font-extralight tracking-tight text-white/60">
+        <ul 
+          ref={microRef} 
+          className="mt-8 flex flex-wrap gap-6 text-xs font-extralight tracking-tight text-foreground/70 dark:text-white/60"
+        >
           {microDetails.map((detail, index) => {
             const refMap = [microItem1Ref, microItem2Ref, microItem3Ref];
             return (
-              <li key={index} ref={refMap[index]} className="flex items-center gap-2">
-                <span className="h-1 w-1 rounded-full bg-white/40" /> {detail}
+              <li 
+                key={index} 
+                ref={refMap[index]} 
+                className="flex items-center gap-2"
+              >
+                <span className="h-1 w-1 rounded-full bg-foreground/50 dark:bg-white/40" /> {detail}
               </li>
             );
           })}
         </ul>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/40 to-transparent" />
     </section>
   );
 }
